@@ -6,7 +6,7 @@
 <title>Klinika İdarəetmə Sistemi — Demo Versiya</title>
 <meta name="description" content="Klinika və mərkəzlər üçün pasiyent qeydiyyatı, seans planlaması, əməkdaş, ödəniş və hesabat sistemi — demo versiya.">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0B3D3F">
+<meta name="theme-color" content="#0D7377">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Klinika Sistemi">
@@ -18,24 +18,24 @@
 <style>
 /* ============ TOKENS ============ */
 :root{
-  --teal-deep:#16223E;
-  --teal:#28406B;
-  --teal-light:#4E71A6;
-  --lavender:#5C6BC0;
-  --lavender-light:#8E99DD;
-  --amber:#D98736;
-  --amber-light:#EAAD6E;
-  --cream:#F7F4EE;
+  --teal-deep:#0D7377;
+  --teal:#14A38B;
+  --teal-light:#5FD3B7;
+  --lavender:#3DA9DC;
+  --lavender-light:#8FD3F4;
+  --amber:#F2994A;
+  --amber-light:#F8C291;
+  --cream:#F4FAF9;
   --cream-card:#FFFFFF;
-  --ink:#1B2622;
-  --ink-soft:#5B6864;
+  --ink:#163238;
+  --ink-soft:#5A7674;
   --border:#E4DFD3;
   --danger:#D96C5A;
   --success:#4C9A7A;
   --radius:20px;
   --radius-sm:12px;
-  --shadow:0 8px 30px rgba(11,61,63,0.08);
-  --shadow-lg:0 20px 60px rgba(11,61,63,0.16);
+  --shadow:0 8px 30px rgba(13,115,119,0.10);
+  --shadow-lg:0 20px 60px rgba(13,115,119,0.18);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -104,8 +104,8 @@ a{color:inherit;text-decoration:none}
 #lockScreen{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:var(--cream)}
 .lock-card{background:var(--cream-card);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem 2rem;width:min(380px,90vw);text-align:center;box-shadow:var(--shadow-lg);animation:riseIn .5s ease}
 @keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.lock-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--lavender));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1.2rem;box-shadow:0 8px 24px rgba(21,94,99,.3);animation:pulseRing 2.4s ease-in-out infinite}
-@keyframes pulseRing{0%,100%{box-shadow:0 0 0 0 rgba(21,94,99,.25)}50%{box-shadow:0 0 0 14px rgba(21,94,99,0)}}
+.lock-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--lavender));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1.2rem;box-shadow:0 8px 24px rgba(20,163,139,.3);animation:pulseRing 2.4s ease-in-out infinite}
+@keyframes pulseRing{0%,100%{box-shadow:0 0 0 0 rgba(20,163,139,.25)}50%{box-shadow:0 0 0 14px rgba(20,163,139,0)}}
 .lock-card h1{font-size:1.55rem;font-weight:700;color:var(--teal-deep);margin-bottom:.4rem}
 .lock-card p{color:var(--ink);opacity:.85;font-weight:600;font-size:.88rem;margin-bottom:1.4rem;line-height:1.4}
 #lockInput{width:100%;padding:14px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size:1.4rem;text-align:center;letter-spacing:6px;margin-bottom:1rem;transition:.2s}
@@ -123,7 +123,7 @@ a{color:inherit;text-decoration:none}
   position:sticky;top:0;height:100vh;
 }
 .brand{display:flex;align-items:center;gap:10px;margin-bottom:2rem;padding:0 .3rem}
-.brand-icon{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--teal),var(--lavender));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;box-shadow:0 6px 16px rgba(21,94,99,.25)}
+.brand-icon{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--teal),var(--lavender));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;box-shadow:0 6px 16px rgba(20,163,139,.25)}
 .brand-text h1{font-size:1.2rem;line-height:1.2;font-weight:700;color:var(--teal-deep);letter-spacing:.01em}
 .brand-text p{font-size:.78rem;color:var(--ink);opacity:.8;font-weight:600;line-height:1.35;margin-top:2px}
 
@@ -135,8 +135,8 @@ a{color:inherit;text-decoration:none}
 .nav{display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto}
 .nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;color:var(--ink-soft);transition:.2s;position:relative}
 .nav-item .ic{font-size:1.02rem;width:22px;text-align:center}
-.nav-item:hover{background:rgba(21,94,99,.06);color:var(--ink)}
-.nav-item.active{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;box-shadow:0 6px 18px rgba(21,94,99,.28)}
+.nav-item:hover{background:rgba(20,163,139,.06);color:var(--ink)}
+.nav-item.active{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;box-shadow:0 6px 18px rgba(20,163,139,.28)}
 
 .sidebar-footer{padding-top:1rem;border-top:1px solid var(--border);margin-top:1rem}
 .credit{font-size:.68rem;color:var(--ink-soft);text-align:center;line-height:1.6}
@@ -161,7 +161,7 @@ a{color:inherit;text-decoration:none}
 .stat-card .l{font-size:.78rem;color:var(--ink-soft);margin-top:6px;font-weight:600}
 .stat-card.teal .n{color:var(--teal)}
 .stat-card.lavender .n{color:var(--lavender)}
-.stat-card.amber .n{color:#B9791F}
+.stat-card.amber .n{color:#C97A2E}
 .stat-card.danger .n{color:var(--danger)}
 .stat-card.success .n{color:var(--success)}
 
@@ -172,8 +172,8 @@ a{color:inherit;text-decoration:none}
 
 /* Buttons */
 .btn{padding:11px 18px;border-radius:12px;font-size:.85rem;font-weight:700;display:inline-flex;align-items:center;gap:7px;transition:.2s}
-.btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;box-shadow:0 6px 16px rgba(21,94,99,.28)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(21,94,99,.34)}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;box-shadow:0 6px 16px rgba(20,163,139,.28)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(20,163,139,.34)}
 .btn-lav{background:linear-gradient(135deg,var(--lavender),var(--lavender-light));color:#fff;box-shadow:0 6px 16px rgba(142,124,195,.3)}
 .btn-lav:hover{transform:translateY(-2px)}
 .btn-amber{background:linear-gradient(135deg,var(--amber),var(--amber-light));color:#5c3b06;box-shadow:0 6px 16px rgba(232,163,61,.32)}
@@ -213,7 +213,7 @@ a{color:inherit;text-decoration:none}
 .badge{font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:100px;white-space:nowrap}
 .badge-teal{background:rgba(42,140,143,.12);color:var(--teal)}
 .badge-lav{background:rgba(142,124,195,.14);color:var(--lavender)}
-.badge-amber{background:rgba(232,163,61,.16);color:#B9791F}
+.badge-amber{background:rgba(242,153,74,.16);color:#C97A2E}
 .badge-danger{background:rgba(217,108,90,.13);color:var(--danger)}
 .badge-success{background:rgba(76,154,122,.14);color:var(--success)}
 
@@ -225,8 +225,12 @@ a{color:inherit;text-decoration:none}
 .overlay{position:fixed;inset:0;background:rgba(11,38,34,.45);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
 .overlay.show{display:flex;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--cream-card);border-radius:var(--radius);padding:1.8rem;width:min(560px,94vw);max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:riseIn .3s ease}
+.modal{background:var(--cream-card);border-radius:var(--radius);border-top:5px solid var(--teal);padding:1.8rem;width:min(560px,94vw);max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:riseIn .3s ease}
 .modal h3{font-size:1.2rem;margin-bottom:1.2rem}
+.modal-icon-header{display:flex;align-items:center;gap:13px;margin-bottom:1.3rem}
+.modal-icon-badge{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;box-shadow:0 8px 18px rgba(20,163,139,.28)}
+.modal-icon-header h3{margin:0;font-size:1.18rem}
+.modal-icon-header .msub{font-size:.76rem;color:var(--ink-soft);margin-top:2px;font-weight:500}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.4rem;flex-wrap:wrap}
 
 /* Patient / Staff detail */
@@ -302,7 +306,7 @@ a{color:inherit;text-decoration:none}
 <!-- LOCK SCREEN -->
 <div id="lockScreen">
   <div class="lock-card">
-    <img src="generic-logo.png" alt="Klinika İdarəetmə Sistemi loqosu" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 1.2rem;display:block;box-shadow:0 8px 24px rgba(21,94,99,.3);animation:pulseRing 2.4s ease-in-out infinite">
+    <img src="generic-logo.png" alt="Klinika İdarəetmə Sistemi loqosu" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 1.2rem;display:block;box-shadow:0 8px 24px rgba(20,163,139,.3);animation:pulseRing 2.4s ease-in-out infinite">
     <h1 class="anim-title">Klinika Sistemi</h1>
     <p>Klinika İdarəetmə Sistemi — Demo</p>
     <div class="field" style="text-align:left"><label>Kimsiniz?</label><select id="loginUser"><option value="admin_master">🔑 Admin (Sistem sahibi)</option></select></div>
@@ -364,6 +368,12 @@ a{color:inherit;text-decoration:none}
         <div class="stat-card amber"><div class="n" id="statSessionsWeek">0</div><div class="l">Bu həftəki seans</div></div>
         <div class="stat-card danger"><div class="n mono" id="statOwed">0 ₼</div><div class="l">Pasiyent borcu</div></div>
       </div>
+      <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-primary btn-sm" onclick="openPatientModal()">⚕️ Yeni pasiyent</button>
+        <button class="btn btn-primary btn-sm" onclick="openSessionModal()">🗓️ Yeni seans</button>
+        <button class="btn btn-primary btn-sm" onclick="openPaymentModal()">💳 Yeni ödəniş</button>
+        <button class="btn btn-outline btn-sm" onclick="switchView('reports')">📊 Hesabata bax</button>
+      </div>
       <div class="panel">
         <div class="panel-head"><h3>💰 Bu ayın maliyyə xülasəsi</h3><button class="btn btn-outline btn-sm" onclick="switchView('reports')">Ətraflı hesabat →</button></div>
         <div class="stats" style="margin-bottom:0">
@@ -377,6 +387,14 @@ a{color:inherit;text-decoration:none}
         <div class="list" id="todaySessionsList"></div>
       </div>
       <div class="panel">
+        <div class="panel-head"><h3>⚠️ Borclu pasiyentlər</h3><button class="btn btn-outline btn-sm" onclick="switchView('payments')">Hamısı →</button></div>
+        <div class="list" id="owedPatientsList"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>🩺 Əməkdaş fəaliyyəti (bu ay)</h3><button class="btn btn-outline btn-sm" onclick="switchView('staff')">Hamısı →</button></div>
+        <div class="list" id="staffActivityList"></div>
+      </div>
+      <div class="panel">
         <div class="panel-head"><h3>🆕 Son əlavə olunan pasiyentlər</h3><button class="btn btn-outline btn-sm" onclick="switchView('patients')">Hamısı →</button></div>
         <div class="list" id="recentPatientsList"></div>
       </div>
@@ -386,7 +404,7 @@ a{color:inherit;text-decoration:none}
     <div class="view" id="view-patients">
       <div class="topbar">
         <div><h2>Pasiyentlər</h2><div class="sub">Bütün pasiyentlərin qeydiyyat siyahısı</div></div>
-        <button class="btn btn-primary" onclick="openPatientModal()">+ Yeni pasiyent</button>
+        <button class="btn btn-primary" onclick="openPatientModal()">⚕️ Yeni pasiyent</button>
       </div>
       <div class="panel">
         <div class="panel-head"><div class="search-box"><span class="ic">🔍</span><input id="patientSearch" placeholder="Ad, telefon və ya səbəbə görə axtar..." oninput="renderPatients()"></div></div>
@@ -416,11 +434,11 @@ a{color:inherit;text-decoration:none}
       </div>
 
       <div class="panel" id="pdSessionsPanel">
-        <div class="panel-head no-print"><h3>Seans tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openSessionModal(currentPatientId)">+ Yeni seans</button></div>
+        <div class="panel-head no-print"><h3>Seans tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openSessionModal(currentPatientId)">⚕️ Yeni seans</button></div>
         <div class="timeline" id="pdSessionsTimeline"></div>
       </div>
       <div class="panel" id="pdPaymentsPanel" style="display:none">
-        <div class="panel-head no-print"><h3>Ödəniş tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openPaymentModal(currentPatientId)">+ Yeni ödəniş</button></div>
+        <div class="panel-head no-print"><h3>Ödəniş tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openPaymentModal(currentPatientId)">⚕️ Yeni ödəniş</button></div>
         <div class="timeline" id="pdPaymentsTimeline"></div>
       </div>
     </div>
@@ -429,7 +447,7 @@ a{color:inherit;text-decoration:none}
     <div class="view" id="view-sessions">
       <div class="topbar">
         <div><h2>Seanslar</h2><div class="sub">Bütün planlanan və keçmiş seanslar</div></div>
-        <button class="btn btn-primary" onclick="openSessionModal()">+ Yeni seans</button>
+        <button class="btn btn-primary" onclick="openSessionModal()">⚕️ Yeni seans</button>
       </div>
       <div class="panel">
         <div class="panel-head"><div class="search-box"><span class="ic">🔍</span><input id="sessionSearch" placeholder="Pasiyent və ya əməkdaş adına görə axtar..." oninput="renderSessions()"></div></div>
@@ -441,7 +459,7 @@ a{color:inherit;text-decoration:none}
     <div class="view" id="view-staff">
       <div class="topbar">
         <div><h2>Əməkdaşlar</h2><div class="sub">Terapevt, psixoloq və digər əməkdaşların siyahısı</div></div>
-        <button class="btn btn-primary" onclick="openStaffModal()">+ Yeni əməkdaş</button>
+        <button class="btn btn-primary" onclick="openStaffModal()">⚕️ Yeni əməkdaş</button>
       </div>
       <div class="panel">
         <div class="panel-head"><div class="search-box"><span class="ic">🔍</span><input id="staffSearch" placeholder="Əməkdaş adına görə axtar..." oninput="renderStaff()"></div></div>
@@ -479,7 +497,7 @@ a{color:inherit;text-decoration:none}
         <div class="timeline" id="sdSessionsTimeline"></div>
       </div>
       <div class="panel" id="sdPaymentsPanel" style="display:none">
-        <div class="panel-head no-print"><h3>Ödəniş tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openStaffPaymentModal(currentStaffId)">+ Ödəniş et</button></div>
+        <div class="panel-head no-print"><h3>Ödəniş tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openStaffPaymentModal(currentStaffId)">⚕️ Ödəniş et</button></div>
         <div class="timeline" id="sdPaymentsTimeline"></div>
       </div>
     </div>
@@ -488,7 +506,7 @@ a{color:inherit;text-decoration:none}
     <div class="view" id="view-payments">
       <div class="topbar">
         <div><h2>Ödənişlər</h2><div class="sub">Pasiyentlərdən daxil olan ödəniş qeydləri</div></div>
-        <button class="btn btn-primary" onclick="openPaymentModal()">+ Yeni ödəniş</button>
+        <button class="btn btn-primary" onclick="openPaymentModal()">⚕️ Yeni ödəniş</button>
       </div>
       <div class="stats">
         <div class="stat-card teal"><div class="n mono" id="payTotalIn">0 ₼</div><div class="l">Cəmi ödənilib</div></div>
@@ -504,7 +522,7 @@ a{color:inherit;text-decoration:none}
     <div class="view" id="view-expenses">
       <div class="topbar">
         <div><h2>Xərclər</h2><div class="sub">Mərkəzin əməliyyat xərcləri</div></div>
-        <button class="btn btn-primary" onclick="openExpenseModal()">+ Yeni xərc</button>
+        <button class="btn btn-primary" onclick="openExpenseModal()">⚕️ Yeni xərc</button>
       </div>
       <div class="stats">
         <div class="stat-card danger"><div class="n mono" id="expTotal">0 ₼</div><div class="l">Cəmi xərc (bütün vaxt)</div></div>
@@ -591,8 +609,11 @@ a{color:inherit;text-decoration:none}
 
 <!-- MODALS -->
 <div class="overlay" id="modalPatient">
-  <div class="modal">
-    <h3 id="patientModalTitle">Yeni pasiyent</h3>
+  <div class="modal" style="border-top-color:var(--teal)">
+    <div class="modal-icon-header">
+      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff">🧑‍🤝‍🧑</div>
+      <div><h3 id="patientModalTitle">Yeni pasiyent</h3><div class="msub">Pasiyent məlumatlarını daxil edin</div></div>
+    </div>
     <input type="hidden" id="editPatientId">
     <div class="grid2">
       <div class="field"><label>Ad Soyad *</label><input id="fName" placeholder="Məs. Aysel Məmmədova"></div>
@@ -611,8 +632,11 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="overlay" id="modalSession">
-  <div class="modal">
-    <h3 id="sessionModalTitle">Yeni seans</h3>
+  <div class="modal" style="border-top-color:var(--lavender)">
+    <div class="modal-icon-header">
+      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--lavender),var(--lavender-light));color:#fff">🗓️</div>
+      <div><h3 id="sessionModalTitle">Yeni seans</h3><div class="msub">Seans planını qeyd edin</div></div>
+    </div>
     <input type="hidden" id="editSessionId">
     <div class="field"><label>Pasiyent *</label><select id="sPatient"></select></div>
     <div class="grid2">
@@ -637,8 +661,11 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="overlay" id="modalPayment">
-  <div class="modal">
-    <h3 id="paymentModalTitle">Yeni ödəniş</h3>
+  <div class="modal" style="border-top-color:var(--success)">
+    <div class="modal-icon-header">
+      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--success),#8fd9b6);color:#fff">💳</div>
+      <div><h3 id="paymentModalTitle">Yeni ödəniş</h3><div class="msub">Ödəniş məlumatlarını daxil edin</div></div>
+    </div>
     <input type="hidden" id="editPaymentId">
     <div class="field"><label>Pasiyent *</label><select id="pPatient"></select></div>
     <div class="grid2">
@@ -656,8 +683,11 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="overlay" id="modalStaff">
-  <div class="modal">
-    <h3 id="staffModalTitle">Yeni əməkdaş</h3>
+  <div class="modal" style="border-top-color:var(--amber)">
+    <div class="modal-icon-header">
+      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--amber),var(--amber-light));color:#fff">🩺</div>
+      <div><h3 id="staffModalTitle">Yeni əməkdaş</h3><div class="msub">Əməkdaş profilini yaradın</div></div>
+    </div>
     <input type="hidden" id="editStaffId">
     <div class="grid2">
       <div class="field"><label>Ad Soyad *</label><input id="stName" placeholder="Məs. Nərmin Əliyeva"></div>
@@ -683,8 +713,11 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="overlay" id="modalStaffPayment">
-  <div class="modal">
-    <h3 id="staffPaymentModalTitle">Əməkdaşa ödəniş</h3>
+  <div class="modal" style="border-top-color:var(--amber)">
+    <div class="modal-icon-header">
+      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--amber),var(--amber-light));color:#fff">💰</div>
+      <div><h3 id="staffPaymentModalTitle">Əməkdaşa ödəniş</h3><div class="msub">Əməkdaşa ödəniş qeyd edin</div></div>
+    </div>
     <input type="hidden" id="editStaffPaymentId">
     <div class="field"><label>Əməkdaş *</label><select id="spStaff"></select></div>
     <div class="grid2">
@@ -700,8 +733,11 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <div class="overlay" id="modalExpense">
-  <div class="modal">
-    <h3 id="expenseModalTitle">Yeni xərc</h3>
+  <div class="modal" style="border-top-color:var(--danger)">
+    <div class="modal-icon-header">
+      <div class="modal-icon-badge" style="background:linear-gradient(135deg,var(--danger),#f0a08f);color:#fff">🧾</div>
+      <div><h3 id="expenseModalTitle">Yeni xərc</h3><div class="msub">Əməliyyat xərcini qeyd edin</div></div>
+    </div>
     <input type="hidden" id="editExpenseId">
     <div class="field"><label>Başlıq *</label><input id="exTitle" placeholder="Məs. Ofis icarəsi"></div>
     <div class="grid2">
@@ -1744,6 +1780,36 @@ function renderDashboard(){
       <div class="avatar">${initials(p.name)}</div>
       <div class="item-main"><div class="t">${p.name}</div><div class="s">${p.reason||'Səbəb qeyd olunmayıb'}</div></div>
     </div>`).join('') : `<div class="empty"><div class="ic">🌱</div><p>Hələ pasiyent yoxdur</p></div>`;
+
+  const owedByPatient = {};
+  Object.values(payments).forEach(p=>{ if(p.status==='owed') owedByPatient[p.patientId] = (owedByPatient[p.patientId]||0) + Number(p.amount||0); });
+  const opl = document.getElementById('owedPatientsList');
+  const owedEntries = Object.entries(owedByPatient).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(opl){
+    opl.innerHTML = owedEntries.length ? owedEntries.map(([pid,amt])=>{
+      const p = patients[pid];
+      return `<div class="item-card" onclick="openPatientDetail('${pid}')">
+        <div class="avatar" style="background:linear-gradient(135deg,var(--danger),#f0a08f)">${initials(p?.name)}</div>
+        <div class="item-main"><div class="t">${p?.name||'-'}</div><div class="s">Ödənilməmiş borc</div></div>
+        <span class="badge badge-danger mono">${amt.toFixed(2)} ₼</span>
+      </div>`;
+    }).join('') : `<div class="empty"><div class="ic">✅</div><p>Borclu pasiyent yoxdur</p></div>`;
+  }
+
+  const staffCounts = {};
+  Object.values(sessions).forEach(s=>{ if(s.staffId && s.date>=ms && s.date<=me) staffCounts[s.staffId] = (staffCounts[s.staffId]||0)+1; });
+  const sal = document.getElementById('staffActivityList');
+  const staffEntries = Object.entries(staffCounts).sort((a,b)=>b[1]-a[1]);
+  if(sal){
+    sal.innerHTML = staffEntries.length ? staffEntries.map(([sid,cnt])=>{
+      const st = window.DB.staff[sid];
+      return `<div class="item-card" onclick="openStaffDetail('${sid}')">
+        <div class="avatar" style="background:linear-gradient(135deg,var(--amber),var(--amber-light))">${initials(st?.name)}</div>
+        <div class="item-main"><div class="t">${st?.name||'-'}</div><div class="s">${st?.role||''}</div></div>
+        <span class="badge badge-teal">${cnt} seans</span>
+      </div>`;
+    }).join('') : `<div class="empty"><div class="ic">🩺</div><p>Bu ay seans keçirilməyib</p></div>`;
+  }
 }
 
 /* ============ AUDIT LOG ============ */
@@ -1799,7 +1865,7 @@ window.printSinglePayment = function(id){
       td{padding:8px 0;font-size:.92rem}
       td:first-child{color:#5B6864;width:40%}
       td:last-child{font-weight:700;text-align:right}
-      .amount{font-size:1.7rem;font-weight:700;text-align:center;margin:22px 0 14px;color:#155E63}
+      .amount{font-size:1.7rem;font-weight:700;text-align:center;margin:22px 0 14px;color:#14A38B}
       .status{text-align:center;padding:5px 16px;border-radius:100px;font-size:.78rem;font-weight:700;margin:0 auto;display:block;width:fit-content}
       .status.paid{background:#e3f2ec;color:#4C9A7A}
       .status.owed{background:#fbe9e6;color:#D96C5A}
