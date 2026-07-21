@@ -266,6 +266,8 @@ a{color:inherit;text-decoration:none}
 
 /* rol əsaslı görünürlük */
 .is-staff .admin-only{display:none!important}
+.is-staff .nav .nav-item:not(.staff-allow){display:none!important}
+.is-staff .nav .nav-item.staff-allow{display:flex!important}
 @media(max-width:880px){
   .shell{flex-direction:column}
   .sidebar{position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:auto;flex-direction:row;padding:.5rem .4rem;z-index:100;border-right:none;border-top:1px solid var(--border);justify-content:flex-start}
@@ -341,6 +343,7 @@ a{color:inherit;text-decoration:none}
       <button class="nav-item" data-view="expenses" onclick="switchView('expenses')"><span class="ic">🧾</span> Xərclər</button>
       <button class="nav-item" data-view="reports" onclick="switchView('reports')"><span class="ic">📊</span> Hesabat</button>
       <button class="nav-item admin-only" data-view="auditlog" onclick="switchView('auditlog')"><span class="ic">🔐</span> Qeydlər</button>
+      <button class="nav-item staff-allow" data-view="staffSelf" onclick="openStaffDetail(window.currentUser.id)" style="display:none"><span class="ic">🩺</span> Mənim Panelim</button>
     </nav>
     <div class="sidebar-footer">
       <div id="currentUserLabel" style="font-size:.72rem;font-weight:700;text-align:center;margin-bottom:8px;color:var(--ink-soft)"></div>
@@ -469,13 +472,13 @@ a{color:inherit;text-decoration:none}
 
     <!-- STAFF DETAIL -->
     <div class="view" id="view-staffDetail">
-      <button class="btn btn-outline btn-sm no-print" onclick="switchView('staff')" style="margin-bottom:1rem">← Əməkdaşlara qayıt</button>
+      <button class="btn btn-outline btn-sm no-print admin-only" onclick="switchView('staff')" style="margin-bottom:1rem">← Əməkdaşlara qayıt</button>
       <div class="panel">
         <div class="pd-head">
           <div class="pd-avatar staff" id="sdAvatar">?</div>
           <div style="flex:1"><div class="pd-name" id="sdName">-</div><div class="pd-meta" id="sdMeta">-</div></div>
           <div style="display:flex;gap:8px" class="no-print">
-            <button class="btn btn-outline btn-sm" onclick="editStaff()">✏️ Redaktə</button>
+            <button class="btn btn-outline btn-sm admin-only" onclick="editStaff()">✏️ Redaktə</button>
             <button class="btn btn-lav btn-sm" onclick="window.print()">🖨️ Çap et</button>
             <button class="btn btn-danger btn-sm admin-only" onclick="deleteStaff()">🗑️</button>
           </div>
@@ -485,19 +488,23 @@ a{color:inherit;text-decoration:none}
         <div class="stat-card teal"><div class="n" id="sdToday">0</div><div class="l">Bugünkü seans</div></div>
         <div class="stat-card lavender"><div class="n" id="sdWeek">0</div><div class="l">Bu həftəki seans</div></div>
         <div class="stat-card amber"><div class="n" id="sdMonth">0</div><div class="l">Bu ayki seans</div></div>
-        <div class="stat-card success"><div class="n mono" id="sdPaid">0 ₼</div><div class="l">Ödənilib</div></div>
-        <div class="stat-card danger"><div class="n mono" id="sdOwed">0 ₼</div><div class="l">Qalan borc</div></div>
       </div>
+      <div class="stats">
+        <div class="stat-card teal"><div class="n mono" id="sdTotalEarned">0 ₼</div><div class="l">Cəmi alacağı</div></div>
+        <div class="stat-card success"><div class="n mono" id="sdPaid">0 ₼</div><div class="l">Ödənilən</div></div>
+        <div class="stat-card danger"><div class="n mono" id="sdOwed">0 ₼</div><div class="l">Ödənilməli qalıq</div></div>
+      </div>
+      <div class="panel" id="sdUpcomingNote" style="padding:.9rem 1.2rem;font-size:.85rem;color:var(--ink-soft)"></div>
       <div class="tabs-inline no-print">
-        <button class="tab-btn active" data-sdtab="sessions" onclick="switchSdTab('sessions')">🗓️ Keçdiyi seanslar</button>
+        <button class="tab-btn active" data-sdtab="sessions" onclick="switchSdTab('sessions')">🗓️ İş qrafiki</button>
         <button class="tab-btn" data-sdtab="payments" onclick="switchSdTab('payments')">💳 Ona ödənişlər</button>
       </div>
       <div class="panel" id="sdSessionsPanel">
-        <div class="panel-head no-print"><h3>Seans tarixçəsi</h3></div>
+        <div class="panel-head no-print"><h3>Seans tarixçəsi — planlaşdırılan və keçirilmiş</h3></div>
         <div class="timeline" id="sdSessionsTimeline"></div>
       </div>
       <div class="panel" id="sdPaymentsPanel" style="display:none">
-        <div class="panel-head no-print"><h3>Ödəniş tarixçəsi</h3><button class="btn btn-primary btn-sm" onclick="openStaffPaymentModal(currentStaffId)">⚕️ Ödəniş et</button></div>
+        <div class="panel-head no-print"><h3>Ödəniş tarixçəsi</h3><button class="btn btn-primary btn-sm admin-only" onclick="openStaffPaymentModal(currentStaffId)">⚕️ Ödəniş et</button></div>
         <div class="timeline" id="sdPaymentsTimeline"></div>
       </div>
     </div>
@@ -649,7 +656,12 @@ a{color:inherit;text-decoration:none}
     </select></div>
     <div class="grid2">
       <div class="field"><label>Əməkdaş (kim keçib)</label><select id="sStaff" onchange="onStaffPickedInSession()"></select></div>
-      <div class="field"><label>Əməkdaşa ödəniləcək (₼)</label><input id="sStaffFee" type="number" step="0.01" placeholder="0.00"></div>
+      <div class="field"><label>Seansın məbləği (₼)</label><input id="sAmount" type="number" step="0.01" placeholder="0.00" oninput="onStaffPickedInSession()"></div>
+    </div>
+    <div class="field" id="sFeePreviewWrap" style="display:none">
+      <div style="font-size:.82rem;color:var(--ink-soft);background:rgba(20,163,139,.08);border:1px solid rgba(20,163,139,.25);border-radius:10px;padding:.65rem .95rem">
+        ⚕️ Əməkdaşa düşəcək pay: <b id="sFeePreview" style="color:var(--teal)">0.00 ₼</b> <span id="sFeePercentLabel" style="color:var(--ink-soft)"></span>
+      </div>
     </div>
     <div class="field"><label>Seans qeydi</label><textarea id="sNote" rows="4" placeholder="Seansda nə baş verdi, müşahidələr..."></textarea></div>
     <div class="field"><label>Növbəti addım</label><input id="sNext" placeholder="Növbəti seans üçün plan"></div>
@@ -698,7 +710,7 @@ a{color:inherit;text-decoration:none}
         <option>Psixoloq</option><option>ABA terapevt</option><option>Loqoped</option><option>Defektoloq</option>
         <option>Erkən müdaxilə mütəxəssisi</option><option>Administrator</option><option>Digər</option>
       </select></div>
-      <div class="field"><label>Seans başına standart haqq (₼)</label><input id="stFee" type="number" step="0.01" placeholder="Məs. 15.00"></div>
+      <div class="field admin-only"><label>Faiz (%) — seansdan alacağı pay</label><input id="stFeePercent" type="number" step="1" min="0" max="100" placeholder="Məs. 30"></div>
     </div>
     <div class="field"><label>Qeydlər</label><textarea id="stNotes" placeholder="Əlavə qeydlər..."></textarea></div>
     <div class="grid2 admin-only">
@@ -779,14 +791,14 @@ function seedDemoData(){
       p5: { name:'Nərmin Cəfərova', phone:'0503334455', age:'19', gender:'Qadın', reason:'Özünüqiymətləndirmə', referral:'İnstagram', notes:'Tələbədir', createdAt: now-10*day }
     },
     staff: {
-      s1: { name:'Nahidə Axundova', phone:'0552107111', role:'Klinik Psixoloq', defaultFee:80, notes:'Mərkəzin direktoru', accessLevel:'admin', pin:'', createdAt: now-200*day },
-      s2: { name:'Səbinə Rzayeva', phone:'0559998877', role:'Uşaq Psixoloqu', defaultFee:60, notes:'', accessLevel:'staff', pin:'2468', createdAt: now-150*day }
+      s1: { name:'Nahidə Axundova', phone:'0552107111', role:'Klinik Psixoloq', feePercent:50, notes:'Mərkəzin direktoru', accessLevel:'admin', pin:'', createdAt: now-200*day },
+      s2: { name:'Səbinə Rzayeva', phone:'0559998877', role:'Uşaq Psixoloqu', feePercent:40, notes:'', accessLevel:'staff', pin:'2468', createdAt: now-150*day }
     },
     sessions: {
-      se1: { patientId:'p1', date: new Date(now-2*day).toISOString().slice(0,10), time:'11:00', type:'Növbəti seans', staffId:'s1', staffFee:80, note:'Nəfəs texnikaları üzərində işləndi', next:'', createdAt: now-2*day },
-      se2: { patientId:'p2', date: new Date(now-1*day).toISOString().slice(0,10), time:'14:30', type:'İlkin görüş', staffId:'s1', staffFee:80, note:'Qiymətləndirmə aparıldı', next:'', createdAt: now-1*day },
-      se3: { patientId:'p3', date: new Date(now).toISOString().slice(0,10), time:'10:00', type:'Növbəti seans', staffId:'s2', staffFee:60, note:'Davranış cədvəli yeniləndi', next:'', createdAt: now },
-      se4: { patientId:'p4', date: new Date(now+2*day).toISOString().slice(0,10), time:'16:00', type:'Növbəti seans', staffId:'s1', staffFee:80, note:'', next:'', createdAt: now }
+      se1: { patientId:'p1', date: new Date(now-2*day).toISOString().slice(0,10), time:'11:00', type:'Növbəti seans', staffId:'s1', amount:80, staffFee:40, note:'Nəfəs texnikaları üzərində işləndi', next:'', createdAt: now-2*day },
+      se2: { patientId:'p2', date: new Date(now-1*day).toISOString().slice(0,10), time:'14:30', type:'İlkin görüş', staffId:'s1', amount:80, staffFee:40, note:'Qiymətləndirmə aparıldı', next:'', createdAt: now-1*day },
+      se3: { patientId:'p3', date: new Date(now).toISOString().slice(0,10), time:'10:00', type:'Növbəti seans', staffId:'s2', amount:60, staffFee:24, note:'Davranış cədvəli yeniləndi', next:'', createdAt: now },
+      se4: { patientId:'p4', date: new Date(now+2*day).toISOString().slice(0,10), time:'16:00', type:'Növbəti seans', staffId:'s1', amount:80, staffFee:40, note:'', next:'', createdAt: now }
     },
     payments: {
       pa1: { patientId:'p1', amount:80, date:new Date(now-2*day).toISOString().slice(0,10), type:'Nağd', status:'paid', note:'', createdAt: now-2*day },
@@ -794,7 +806,7 @@ function seedDemoData(){
       pa3: { patientId:'p3', amount:60, date:new Date(now).toISOString().slice(0,10), type:'Nağd', status:'owed', note:'Növbəti dəfə ödəniləcək', createdAt: now }
     },
     staffPayments: {
-      sp1: { staffId:'s2', amount:180, date:new Date(now-5*day).toISOString().slice(0,10), note:'Aylıq hissə', createdAt: now-5*day }
+      sp1: { staffId:'s2', amount:15, date:new Date(now-5*day).toISOString().slice(0,10), note:'Qismən ödəniş', createdAt: now-5*day }
     },
     expenses: {
       ex1: { title:'Ofis icarəsi', category:'İcarə', amount:400, date:new Date(now-10*day).toISOString().slice(0,10), note:'', createdAt: now-10*day },
@@ -994,6 +1006,9 @@ function applyRoleUI(){
   document.body.classList.toggle('is-staff', !admin);
   const el = document.getElementById('currentUserLabel');
   if(el && window.currentUser) el.textContent = '👤 ' + window.currentUser.name + (admin?' · Admin':' · Əməkdaş');
+  if(!admin && window.currentUser && typeof window.openStaffDetail === 'function'){
+    window.openStaffDetail(window.currentUser.id);
+  }
   if(typeof window.renderAll === 'function') window.renderAll();
 }
 window.logoutUser = function(){
@@ -1260,10 +1275,10 @@ window.openStaffModal = function(id){
   document.getElementById('staffModalTitle').textContent = id?'Əməkdaşı redaktə et':'Yeni əməkdaş';
   if(id){
     const s = window.DB.staff[id];
-    stName.value=s.name||''; stPhone.value=s.phone||''; stRole.value=s.role||'Psixoloq'; stFee.value=s.defaultFee||''; stNotes.value=s.notes||'';
+    stName.value=s.name||''; stPhone.value=s.phone||''; stRole.value=s.role||'Psixoloq'; stFeePercent.value=(s.feePercent??''); stNotes.value=s.notes||'';
     stAccessLevel.value=s.accessLevel||'staff'; stPin.value=s.pin||'';
   } else {
-    stName.value=stPhone.value=stFee.value=stNotes.value=stPin.value=''; stRole.value='Psixoloq'; stAccessLevel.value='staff';
+    stName.value=stPhone.value=stFeePercent.value=stNotes.value=stPin.value=''; stRole.value='Psixoloq'; stAccessLevel.value='staff';
   }
   openModal('modalStaff');
 }
@@ -1272,7 +1287,9 @@ window.saveStaff = function(){
   if(!name){ toast('Ad daxil edin'); return; }
   const existing = window.DB.staff[editStaffId.value];
   const val = {
-    name, phone:stPhone.value.trim(), role:stRole.value, defaultFee: stFee.value?parseFloat(stFee.value):null, notes:stNotes.value.trim(),
+    name, phone:stPhone.value.trim(), role:stRole.value,
+    feePercent: isAdmin() ? (stFeePercent.value?parseFloat(stFeePercent.value):null) : (existing?.feePercent??null),
+    notes:stNotes.value.trim(),
     accessLevel: isAdmin() ? stAccessLevel.value : (existing?.accessLevel||'staff'),
     pin: isAdmin() ? stPin.value.trim() : (existing?.pin||''),
     createdAt: existing?.createdAt || Date.now()
@@ -1308,22 +1325,38 @@ window.renderStaff = function(){
       <span class="badge badge-amber">${staffSessionCount(id)} seans</span>
     </div>`).join('');
 }
-window.openStaffDetail = function(id){
-  currentStaffId = id;
+function updateStaffDetailStats(id){
   const s = window.DB.staff[id];
   if(!s) return;
   document.getElementById('sdAvatar').textContent = initials(s.name);
   document.getElementById('sdName').textContent = s.name;
-  document.getElementById('sdMeta').textContent = `${s.role||''} ${s.phone?'· '+s.phone:''} ${s.defaultFee?'· Standart haqq: '+Number(s.defaultFee).toFixed(2)+' ₼':''}`;
+  document.getElementById('sdMeta').textContent = `${s.role||''} ${s.phone?'· '+s.phone:''} ${(s.feePercent!=null&&s.feePercent!=='')?'· Faiz: '+s.feePercent+'%':''}`;
+  const today = todayISO();
   const mySessions = Object.entries(window.DB.sessions).filter(([id2,x])=>x.staffId===id);
-  document.getElementById('sdToday').textContent = mySessions.filter(([id2,x])=>x.date===todayISO()).length;
+  const completed = mySessions.filter(([id2,x])=>x.date && x.date<=today);
+  const upcoming = mySessions.filter(([id2,x])=>x.date && x.date>today);
+  document.getElementById('sdToday').textContent = mySessions.filter(([id2,x])=>x.date===today).length;
   document.getElementById('sdWeek').textContent = mySessions.filter(([id2,x])=>x.date && isSameWeek(x.date)).length;
   document.getElementById('sdMonth').textContent = mySessions.filter(([id2,x])=>x.date && isSameMonth(x.date)).length;
-  const totalEarned = mySessions.reduce((sum,[id2,x])=>sum+Number(x.staffFee||0),0);
+  const totalEarned = completed.reduce((sum,[id2,x])=>sum+Number(x.staffFee||0),0);
   const myPayments = Object.entries(window.DB.staffPayments).filter(([id2,x])=>x.staffId===id);
   const totalPaid = myPayments.reduce((sum,[id2,x])=>sum+Number(x.amount||0),0);
+  document.getElementById('sdTotalEarned').textContent = totalEarned.toFixed(2)+' ₼';
   document.getElementById('sdPaid').textContent = totalPaid.toFixed(2)+' ₼';
   document.getElementById('sdOwed').textContent = Math.max(0,totalEarned-totalPaid).toFixed(2)+' ₼';
+  const upcomingEarn = upcoming.reduce((sum,[id2,x])=>sum+Number(x.staffFee||0),0);
+  const noteEl = document.getElementById('sdUpcomingNote');
+  if(noteEl){
+    noteEl.innerHTML = upcoming.length
+      ? `🔜 Planlaşdırılan <b>${upcoming.length}</b> seansdan gözlənilən: <b>${upcomingEarn.toFixed(2)} ₼</b> — seans keçiriləndən sonra "Cəmi alacağı"na əlavə olunacaq`
+      : `✅ Planlaşdırılan gələcək seans yoxdur`;
+  }
+}
+window.openStaffDetail = function(id){
+  currentStaffId = id;
+  const s = window.DB.staff[id];
+  if(!s) return;
+  updateStaffDetailStats(id);
   switchSdTab('sessions');
   renderStaffDetailLists();
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -1334,14 +1367,18 @@ function renderStaffDetailLists(){
   const sess = Object.entries(window.DB.sessions).filter(([id,s])=>s.staffId===currentStaffId).sort((a,b)=>(b[1].date||'').localeCompare(a[1].date||''));
   const pay = Object.entries(window.DB.staffPayments).filter(([id,p])=>p.staffId===currentStaffId).sort((a,b)=>(b[1].date||'').localeCompare(a[1].date||''));
   const st = document.getElementById('sdSessionsTimeline');
+  const today = todayISO();
   st.innerHTML = sess.length? sess.map(([id,s])=>{
     const pat = window.DB.patients[s.patientId];
+    const isPast = s.date && s.date <= today;
+    const statusBadge = isPast ? '<span class="badge badge-success" style="margin-left:8px">✓ Keçirilib</span>' : '<span class="badge badge-lav" style="margin-left:8px">🔜 Planlaşdırılıb</span>';
     return `<div class="tl-item">
-      <div class="tl-date">${fmtDate(s.date)} ${s.time||''} · ${s.type||''}</div>
+      <div class="tl-date">${fmtDate(s.date)} ${s.time||''} · ${s.type||''} ${statusBadge}</div>
       <div class="tl-body">
         <div style="font-weight:700;margin-bottom:4px">🧑 ${pat?.name||'Silinmiş pasiyent'}</div>
         <div>${s.note||'Qeyd yoxdur'}</div>
-        ${s.staffFee?`<div style="margin-top:6px;color:var(--teal);font-weight:600">💰 ${Number(s.staffFee).toFixed(2)} ₼</div>`:''}
+        ${s.amount?`<div style="margin-top:6px;font-size:.8rem;color:var(--ink-soft)">Seans məbləği: ${Number(s.amount).toFixed(2)} ₼</div>`:''}
+        ${s.staffFee?`<div style="margin-top:2px;color:var(--teal);font-weight:600">💰 Mənə düşən pay: ${Number(s.staffFee).toFixed(2)} ₼</div>`:''}
       </div>
     </div>`;
   }).join('') : `<div class="empty"><div class="ic">🗓️</div><p>Hələ seans qeydi yoxdur</p></div>`;
@@ -1408,8 +1445,15 @@ function fillStaffSelect(selectEl, presetId){
 window.onStaffPickedInSession = function(){
   const sid = document.getElementById('sStaff').value;
   const s = window.DB.staff[sid];
-  if(s && s.defaultFee && !document.getElementById('sStaffFee').value){
-    document.getElementById('sStaffFee').value = s.defaultFee;
+  const amount = parseFloat(document.getElementById('sAmount').value)||0;
+  const wrap = document.getElementById('sFeePreviewWrap');
+  if(s && s.feePercent){
+    const fee = amount * (s.feePercent/100);
+    document.getElementById('sFeePreview').textContent = fee.toFixed(2)+' ₼';
+    document.getElementById('sFeePercentLabel').textContent = '('+s.feePercent+'% × '+amount.toFixed(2)+' ₼)';
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
   }
 }
 
@@ -1428,16 +1472,20 @@ window.openSessionModal = function(presetPatientId, editId){
   if(editId){
     const s = window.DB.sessions[editId];
     sPatient.value=s.patientId; sDate.value=s.date||''; sTime.value=s.time||''; sType.value=s.type||'İlkin görüş';
-    sStaff.value=s.staffId||''; sStaffFee.value=s.staffFee||''; sNote.value=s.note||''; sNext.value=s.next||'';
+    sStaff.value=s.staffId||''; sAmount.value=s.amount||''; sNote.value=s.note||''; sNext.value=s.next||'';
   } else {
-    sDate.value = todayISO(); sTime.value=''; sType.value='İlkin görüş'; sStaff.value=''; sStaffFee.value=''; sNote.value=''; sNext.value='';
+    sDate.value = todayISO(); sTime.value=''; sType.value='İlkin görüş'; sStaff.value=''; sAmount.value=''; sNote.value=''; sNext.value='';
   }
+  onStaffPickedInSession();
   openModal('modalSession');
 }
 window.saveSession = function(){
   if(!sPatient.value){ toast('Pasiyent seçin'); return; }
   if(!sDate.value){ toast('Tarix daxil edin'); return; }
-  const val = { patientId:sPatient.value, date:sDate.value, time:sTime.value, type:sType.value, staffId:sStaff.value||null, staffFee: sStaffFee.value?parseFloat(sStaffFee.value):null, note:sNote.value.trim(), next:sNext.value.trim(), createdAt: window.DB.sessions[editSessionId.value]?.createdAt || Date.now() };
+  const amount = sAmount.value?parseFloat(sAmount.value):null;
+  const pickedStaff = sStaff.value ? window.DB.staff[sStaff.value] : null;
+  const staffFee = (amount && pickedStaff && pickedStaff.feePercent) ? Math.round(amount*(pickedStaff.feePercent/100)*100)/100 : null;
+  const val = { patientId:sPatient.value, date:sDate.value, time:sTime.value, type:sType.value, staffId:sStaff.value||null, amount, staffFee, note:sNote.value.trim(), next:sNext.value.trim(), createdAt: window.DB.sessions[editSessionId.value]?.createdAt || Date.now() };
   const id = editSessionId.value;
   const patName = window.DB.patients[val.patientId]?.name || '';
   if(id){ window.__fbUpdateSession(id, val); logAction('Seans','Redaktə', patName, val.date); toast('Seans yeniləndi ✓'); }
@@ -1905,7 +1953,7 @@ window.renderAll = function(){
   renderReports();
   renderAuditLog();
   if(currentPatientId && window.DB.patients[currentPatientId]) renderPatientDetailLists();
-  if(currentStaffId && window.DB.staff[currentStaffId]) renderStaffDetailLists();
+  if(currentStaffId && window.DB.staff[currentStaffId]){ updateStaffDetailStats(currentStaffId); renderStaffDetailLists(); }
 }
 </script>
 </body>
